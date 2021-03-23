@@ -82,6 +82,19 @@ namespace SolutionTests {
         }
 
         [Test]
+        public void TestStringPartitioning() {
+            Assert.AreEqual(
+                new List<string> { "brown", " ", "fox" },
+                RecapSolutions.Partition("brown fox")
+            );
+
+            Assert.AreEqual(
+                new List<string> { },
+                RecapSolutions.Partition("")
+            );
+        }
+
+        [Test]
         public void TestPigLatinize() {
             const string input = "How are you on January 1st? I am fine, thanks.";
             const string output = "Owhay areway ouyay onway Anuaryjay 1st? Iway amway inefay, hankstay.";
@@ -101,6 +114,54 @@ namespace SolutionTests {
 
             RecapSolutions.PigLatinizeLine();
             Assert.AreEqual(output + Environment.NewLine, mockStdout.ToString());
+
+            // Misc tests
+            Assert.AreEqual("", RecapSolutions.PigLatinize(""));
+
+            RecapSolutions.PigLatinizeLine();
+            Assert.AreEqual(output + Environment.NewLine, mockStdout.ToString());
+        }
+
+        [Test]
+        public void TestInputCountStatistics() {
+            // Test via list console
+            var lCon = new ListConsole(
+                new List<string>{ "People love me at parties", "when they ask me \"Oh, you are a computer guy?", "Can you fix my laptop?\"", "And I respond...", "\"Computer Science is no more about computers", "than astronomy is about telescopes\"" },
+                new List<string>()
+            );
+
+            RecapSolutions.InputCountStatistics(lCon);
+            Assert.AreEqual(
+                new List<String> {
+                    "Lines: 6",
+                    "Words: 35",
+                    "Characters: 149"
+                },
+                lCon.GetStdout()
+            );
+
+            // Test via """real""" console
+            var mockStdin = new StringReader(
+                "People love me at parties" + Environment.NewLine +
+                "when they ask me \"Oh, you are a computer guy?" + Environment.NewLine +
+                "Can you fix my laptop?\"" + Environment.NewLine +
+                "And I respond..." + Environment.NewLine +
+                "\"Computer Science is no more about computers" + Environment.NewLine +
+                "than astronomy is about telescopes\""
+            );
+
+            var mockStdout = new StringWriter();
+
+            Console.SetIn(mockStdin);
+            Console.SetOut(mockStdout);
+
+            RecapSolutions.InputCountStatistics();
+            string[] lines = mockStdout.ToString().Split(Environment.NewLine);
+
+            Assert.True(lines.Length >= 3);
+            Assert.AreEqual("Lines: 6", lines[0]);
+            Assert.AreEqual("Words: 35", lines[1]);
+            Assert.AreEqual("Characters: 149", lines[2]);
         }
     }
 }

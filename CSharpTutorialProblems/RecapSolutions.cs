@@ -153,5 +153,48 @@ namespace CSharpTutorialProblems {
                 )
             );
         }
+
+        public static List<string> GetWords(this string str) {
+            StringBuilder sb = new();
+            List<string> words = new();
+
+            foreach (char c in str.ToCharArray()) {
+                if (char.IsLetterOrDigit(c)) {
+                    sb.Append(c);
+                } else {
+                    if (sb.Length > 0) {
+                        words.Add(sb.ToString());
+                        sb.Length = 0;
+                    }
+                }
+            }
+
+            if (sb.Length > 0) {
+                words.Add(sb.ToString());
+            }
+
+            return words;
+        }
+
+        public static void InputCountStatistics() {
+            InputCountStatistics(StdCon.Value);
+        }
+        public static void InputCountStatistics(IConsole console) {
+            List<string> lines = new();
+            string? ln;
+
+            do {
+                ln = console.ReadLine();
+                if (ln != null) {
+                    lines.Add(ln);
+                }
+            } while (ln != null);
+
+            List<List<string>> words = lines.Select(GetWords).ToList();
+
+            console.WriteLine($"Lines: {lines.Count}");
+            console.WriteLine($"Words: {words.Aggregate(0, (sum, l) => l.Count + sum)}");
+            console.WriteLine($"Characters: {words.Aggregate(0, (sum, l) => sum + l.Aggregate(0, (sm, s) => sm + s.Length))}");
+        }
     }
 }
