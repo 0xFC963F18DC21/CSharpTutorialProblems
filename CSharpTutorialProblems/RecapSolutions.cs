@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using CSharpTutorialProblems.Utils;
 
 namespace CSharpTutorialProblems {
@@ -80,6 +81,77 @@ namespace CSharpTutorialProblems {
             while (strs.Count > 0) {
                 console.WriteLine(strs.Pop());
             }
+        }
+
+        public static List<string> Partition(this string str) {
+            List<string> words = new();
+            StringBuilder sb = new();
+
+            foreach (var c in str.ToCharArray()) {
+                if (char.IsLetterOrDigit(c)) {
+                    sb.Append(c);
+                } else {
+                    words.Add(sb.ToString());
+                    words.Add( $"{c}");
+                    sb.Length = 0; // Clear StringBuilder
+                }
+            }
+
+            if (sb.Length > 0) {
+                words.Add(sb.ToString());
+            }
+
+            return words;
+        }
+
+        public static string PigLatinize(this string word) {
+            const string vowels = "aeiou";
+
+            switch (word.Length) {
+                case <= 0:
+                    return "";
+                case 1 when char.IsLetter(word[0]):
+                    return vowels.Contains(char.ToLower(word[0])) ? word + "way" : word + "ay";
+                case 1:
+                    return word;
+            }
+
+            if (word.Any(char.IsDigit)) {
+                return word;
+            }
+
+            var shouldCap = char.IsUpper(word[0]);
+            var begin = char.ToLower(word[0]);
+
+            if (!vowels.Contains(begin)) {
+                StringBuilder sb = new(word.Substring(1).ToLower());
+                var newStart = sb[0];
+
+                sb.Insert(1, shouldCap ? char.ToUpper(newStart) : newStart);
+                sb.Append(begin);
+                sb.Append("ay");
+
+                return sb.Remove(0, 1).ToString();
+            } else {
+                return (shouldCap ? char.ToUpper(begin) : begin) + word.Substring(1).ToLower() + "way";
+            }
+        }
+
+        public static void PigLatinizeLine() {
+            PigLatinizeLine(StdCon.Value);
+        }
+
+        public static void PigLatinizeLine(IConsole console) {
+            var line = console.ReadLine();
+            if (line == null) return;
+
+            console.WriteLine(
+                String.Join("",
+                    line.Partition()
+                        .Where(s => s.Length > 0)
+                        .Select(PigLatinize)
+                )
+            );
         }
     }
 }

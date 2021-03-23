@@ -33,6 +33,10 @@ namespace CSharpTutorialProblems.Utils {
         }
 
         public List<string> GetStdout() {
+            if (Stdout.Count <= 0) {
+                return new List<string>();
+            }
+
             var l = Stdout.ConvertAll(s => s);
             if (l[^1] == "") {
                 l.RemoveAt(l.Count - 1);
@@ -48,6 +52,10 @@ namespace CSharpTutorialProblems.Utils {
             Stdin.RemoveAt(0);
 
             return str;
+        }
+
+        public void ClearStdout() {
+            Stdout.Clear();
         }
     }
 }

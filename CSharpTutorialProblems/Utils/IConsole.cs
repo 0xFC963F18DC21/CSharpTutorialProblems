@@ -9,5 +9,7 @@ namespace CSharpTutorialProblems.Utils {
         }
 
         public string? ReadLine();
+
+        public void ClearStdout();
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CSharpTutorialProblems;
 using CSharpTutorialProblems.Utils;
@@ -60,11 +61,46 @@ namespace SolutionTests {
         [Test]
         public void TestReverseInputs() {
             var strings = new List<string> { "A man", "A plan", "A canal", "Panama" };
+            var moreStrings = new List<string>(strings);
+            var expected = new List<string> { "Panama", "A canal", "A plan", "A man" };
+
+            // Test via list console
             var lCon = new ListConsole(strings, new List<string>());
 
             RecapSolutions.ReverseInputs(lCon);
-            Assert.AreEqual(new List<string> { "Panama", "A canal", "A plan", "A man" }, lCon.GetStdout());
+            Assert.AreEqual(expected, lCon.GetStdout());
 
+            // Test via """real""" console
+            var mockStdin = new StringReader(string.Join(Environment.NewLine, moreStrings));
+            var mockStdout = new StringWriter();
+
+            Console.SetIn(mockStdin);
+            Console.SetOut(mockStdout);
+
+            RecapSolutions.ReverseInputs();
+            Assert.AreEqual(expected.ToArray(), mockStdout.ToString().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        [Test]
+        public void TestPigLatinize() {
+            const string input = "How are you on January 1st? I am fine, thanks.";
+            const string output = "Owhay areway ouyay onway Anuaryjay 1st? Iway amway inefay, hankstay.";
+
+            // Test via list console
+            var lCon = new ListConsole(new List<string> { input }, new List<string>());
+
+            RecapSolutions.PigLatinizeLine(lCon);
+            Assert.AreEqual(output, lCon.GetStdout()[0]);
+
+            // Test via """real""" console
+            var mockStdin = new StringReader(input + Environment.NewLine);
+            var mockStdout = new StringWriter();
+
+            Console.SetIn(mockStdin);
+            Console.SetOut(mockStdout);
+
+            RecapSolutions.PigLatinizeLine();
+            Assert.AreEqual(output + Environment.NewLine, mockStdout.ToString());
         }
     }
 }

@@ -16,4 +16,8 @@
       <ProjectReference Include="..\CSharpTutorialProblems\CSharpTutorialProblems.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="TestUtils" />
+    </ItemGroup>
+
 </Project>
